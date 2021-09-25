@@ -15,4 +15,14 @@ describe('PasswordService', () => {
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
+
+  it('it can hash given password', async () => {
+    // This just tests that we process given string and
+    // return something different than given value.
+    const given = 'lorem ipsum hello';
+    const got = await service.hashPassword(given);
+
+    expect(got).toEqual(expect.any(String));
+    expect(got).not.toEqual(given);
+  });
 });
