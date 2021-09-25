@@ -7,6 +7,7 @@ import { NotificationsModule } from './notifications/notifications.module';
 import { TemplatesController } from './templates/templates.controller';
 import { TemplatesService } from './templates/templates.service';
 import { TemplatesModule } from './templates/templates.module';
+import { ConversationsModule } from './conversations/conversations.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { TemplatesModule } from './templates/templates.module';
     LanguagesModule,
     NotificationsModule,
     TemplatesModule,
+    ConversationsModule,
   ],
   controllers: [NotificationsController, TemplatesController],
   providers: [NotificationsService, TemplatesService],
