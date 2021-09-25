@@ -1,12 +1,31 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersService } from './users.service';
+import { User } from './user.entity';
+import { getRepositoryToken } from '@nestjs/typeorm';
+import { mockUser } from './users.controller.spec';
+import { Gender } from './genders.enum';
+
+const mockUserRepository = {
+  findOne: jest.fn().mockImplementation(() => {
+    return mockUser;
+  }),
+  find: jest.fn().mockImplementation(() => {
+    return [mockUser];
+  }),
+};
 
 describe('UsersService', () => {
   let service: UsersService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [UsersService],
+      providers: [
+        UsersService,
+        {
+          provide: getRepositoryToken(User),
+          useValue: mockUserRepository,
+        },
+      ],
     }).compile();
 
     service = module.get<UsersService>(UsersService);
@@ -16,16 +35,18 @@ describe('UsersService', () => {
     expect(service).toBeDefined();
   });
 
-  it('user detail should be defined', () => {
-    const result = service.userDetail('123123');
+  it('should find user by id', async () => {
+    const u = mockUser();
+    const got = await service.userDetail(u.id);
 
-    expect(result.firstName).toEqual('Lorem');
-    expect(result.lastName).toEqual('Ipsum');
+    expect(mockUserRepository.findOne).toHaveBeenCalled();
+    expect(got).toEqual(mockUser);
   });
 
-  it('should return blank if no user found', () => {
-    const got = service.userDetail('qrfdle');
+  it('should search with gender', async () => {
+    const result = await service.searchUser(Gender.female);
 
-    expect(got).toBeUndefined();
+    expect(mockUserRepository.find).toHaveBeenCalled();
+    expect(result).toHaveLength(1);
   });
 });
