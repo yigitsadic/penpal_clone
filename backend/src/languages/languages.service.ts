@@ -7,10 +7,14 @@ import { Language } from './language.entity';
 export class LanguagesService {
   constructor(
     @InjectRepository(Language)
-    private languageRepository: Repository<Language>,
+    private repository: Repository<Language>,
   ) {}
 
   async findAll() {
-    return await this.languageRepository.find();
+    return await this.repository.find({
+      order: {
+        name: 'ASC',
+      },
+    });
   }
 }

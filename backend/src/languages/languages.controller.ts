@@ -6,7 +6,7 @@ export class LanguagesController {
   constructor(private languagesService: LanguagesService) {}
 
   @Get()
-  findAll() {
-    return this.languagesService.findAll();
+  async findAll() {
+    return await this.languagesService.findAll();
   }
 }
