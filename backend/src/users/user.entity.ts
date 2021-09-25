@@ -21,6 +21,13 @@ export class User {
   @Column()
   bio: string;
 
+  @Column({ select: false })
+  password: string;
+
+  // TODO: It's not working. Find a way to fix it!
   @ManyToOne(() => City, (city) => city.users, {})
   city: City;
+
+  @Column()
+  cityId: string;
 }
