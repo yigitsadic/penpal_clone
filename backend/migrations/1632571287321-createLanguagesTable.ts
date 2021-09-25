@@ -11,6 +11,7 @@ export class createLanguagesTable1632571287321 implements MigrationInterface {
             type: 'uuid',
             isPrimary: true,
             isGenerated: true,
+            default: 'gen_random_uuid()',
           },
           {
             name: 'name',
