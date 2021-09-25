@@ -23,4 +23,8 @@ describe('NotificationsController', () => {
     expect(controller.findAll()).toHaveLength(1);
     expect(controller.findAll()[0].title).toEqual('Hello World');
   });
+
+  it('marks all notifications as read', () => {
+    expect(controller.readAll().status).toBeTruthy();
+  });
 });

@@ -23,4 +23,8 @@ describe('NotificationsService', () => {
     expect(result[0].title).toEqual('Hello World');
     expect(result[0].content).toEqual('This is content');
   });
+
+  it('should always return true mark as read', () => {
+    expect(service.markAllAsRead('123123')).toBeTruthy();
+  });
 });

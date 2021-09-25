@@ -3,13 +3,20 @@ import Notification from './notification.model';
 
 @Injectable()
 export class NotificationsService {
-  findAllForUser(userId: string): Notification[] {
-    const notification = new Notification();
-    notification.userId = userId;
-    notification.title = 'Hello World';
-    notification.content = 'This is content';
-    notification.readAt = new Date().toISOString();
+  notifications: Notification[] = [
+    {
+      title: 'Hello World',
+      content: 'This is content',
+      readAt: undefined,
+      userId: '131231',
+    },
+  ];
 
-    return [notification];
+  findAllForUser(userId: string): Notification[] {
+    return this.notifications;
+  }
+
+  markAllAsRead(userId: string): boolean {
+    return true;
   }
 }
