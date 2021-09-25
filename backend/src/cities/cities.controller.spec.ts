@@ -1,34 +1,44 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CitiesController } from './cities.controller';
 import { CitiesService } from './cities.service';
-import City from './city.model';
+import { City } from './city.entity';
+
+const mockCityService = {
+  findAll: jest.fn().mockImplementation(() => {
+    const city = new City();
+    city.name = 'Ankara';
+    city.id = '12312';
+    city.country = 'Turkey';
+
+    return [city];
+  }),
+};
 
 describe('CitiesController', () => {
   let controller: CitiesController;
-  let service: CitiesService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [CitiesController],
-      providers: [CitiesService],
+      providers: [
+        {
+          provide: CitiesService,
+          useValue: mockCityService,
+        },
+      ],
     }).compile();
 
     controller = module.get<CitiesController>(CitiesController);
-    service = module.get<CitiesService>(CitiesService);
   });
 
   it('should be defined', () => {
     expect(controller).toBeDefined();
   });
 
-  it('should list cities', () => {
-    const city = new City();
-    city.name = 'Ankara';
+  it('should list cities', async () => {
+    const got = await controller.findAll();
 
-    const result = [city];
-
-    jest.spyOn(service, 'findAll').mockImplementation(() => result);
-
-    expect(controller.findAll()).toBe(result);
+    expect(got[0].name).toBe('Ankara');
+    expect(mockCityService.findAll).toHaveBeenCalled();
   });
 });

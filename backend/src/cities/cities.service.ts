@@ -1,15 +1,20 @@
 import { Injectable } from '@nestjs/common';
-import City from './city.model';
+import { City } from './city.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class CitiesService {
-  findAll(): City[] {
-    const city1 = new City();
-    const city2 = new City();
+  constructor(
+    @InjectRepository(City)
+    private repository: Repository<City>,
+  ) {}
 
-    city1.name = 'Ankara';
-    city2.name = 'İstanbul';
-
-    return [city1, city2];
+  async findAll() {
+    return await this.repository.find({
+      order: {
+        name: 'ASC',
+      },
+    });
   }
 }
