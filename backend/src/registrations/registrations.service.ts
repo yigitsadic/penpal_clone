@@ -3,24 +3,19 @@ import { RegistrationDto } from './registration.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../users/user.entity';
 import { Repository } from 'typeorm';
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const bcrypt = require('bcrypt');
+import { PasswordService } from '../password/password.service';
 
 @Injectable()
 export class RegistrationsService {
   constructor(
     @InjectRepository(User)
     private repository: Repository<User>,
+    private passwordService: PasswordService,
   ) {}
 
   async register(dto: RegistrationDto) {
     const newUser = this.repository.create(dto);
-    newUser.password = await this.hashPassword(dto.password);
+    newUser.password = await this.passwordService.hashPassword(dto.password);
     return await this.repository.save(newUser);
-  }
-
-  async hashPassword(pwd: string) {
-    return await bcrypt.hash(pwd, 12);
   }
 }

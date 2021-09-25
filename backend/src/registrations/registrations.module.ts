@@ -3,9 +3,10 @@ import { RegistrationsService } from './registrations.service';
 import { RegistrationsController } from './registrations.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '../users/user.entity';
+import { PasswordModule } from '../password/password.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User])],
+  imports: [TypeOrmModule.forFeature([User]), PasswordModule],
   providers: [RegistrationsService],
   controllers: [RegistrationsController],
 })
