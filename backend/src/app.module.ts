@@ -9,9 +9,20 @@ import { TemplatesService } from './templates/templates.service';
 import { TemplatesModule } from './templates/templates.module';
 import { ConversationsModule } from './conversations/conversations.module';
 import { UsersModule } from './users/users.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
   imports: [
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      host: 'localhost',
+      port: 5500,
+      username: 'penpal',
+      password: 'password',
+      database: 'penpal_clone',
+      synchronize: false,
+      autoLoadEntities: true,
+    }),
     CitiesModule,
     LanguagesModule,
     NotificationsModule,

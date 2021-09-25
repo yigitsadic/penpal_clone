@@ -1,19 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import Language from './language.model';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Language } from './language.entity';
 
 @Injectable()
 export class LanguagesService {
-  findAll(): Language[] {
-    const l1 = new Language();
-    l1.name = 'Turkish';
-    l1.localName = 'Türkçe';
-    l1.shortCode = 'TR';
+  constructor(
+    @InjectRepository(Language)
+    private languageRepository: Repository<Language>,
+  ) {}
 
-    const l2 = new Language();
-    l2.name = 'French';
-    l2.localName = 'Français';
-    l2.shortCode = 'FR';
-
-    return [l1, l2];
+  async findAll() {
+    return await this.languageRepository.find();
   }
 }
