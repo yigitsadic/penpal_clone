@@ -5,8 +5,6 @@ import { RegistrationDto } from './registration.dto';
 import { HttpStatus, UnprocessableEntityException } from '@nestjs/common';
 import { AuthService } from '../auth/auth.service';
 import { PasswordModule } from '../password/password.module';
-import { JwtModule } from '@nestjs/jwt';
-import { jwtConstants } from '../auth/constants';
 
 const mockRegistrationService = {
   register: jest.fn().mockImplementation(() => {
