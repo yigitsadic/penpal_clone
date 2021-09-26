@@ -11,6 +11,10 @@ const mockUserService = {
   }),
 };
 
+const mockJwtService = {
+  sign: jest.fn().mockImplementation(() => 'ey...'),
+};
+
 describe('AuthService', () => {
   let service: AuthService;
   let passwordService: PasswordService;
@@ -24,10 +28,13 @@ describe('AuthService', () => {
       providers: [
         AuthService,
         PasswordService,
-        JwtService,
         {
           provide: UsersService,
           useValue: mockUserService,
+        },
+        {
+          provide: JwtService,
+          useValue: mockJwtService,
         },
       ],
     }).compile();
