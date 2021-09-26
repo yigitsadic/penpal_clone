@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { TemplatesService } from './templates.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Template } from './template.entity';
+import { CreateTemplateDto } from './create-template.dto';
 
 const mockTemplateRepository = {
   find: jest.fn().mockImplementation(() => {
@@ -10,6 +11,19 @@ const mockTemplateRepository = {
 
     return [t1];
   }),
+  create: jest
+    .fn()
+    .mockImplementation(
+      (params: { languageId: string; content: string; userId: string }) => {
+        const tmp = new Template();
+        tmp.content = params.content;
+        tmp.userId = params.userId;
+        tmp.languageId = params.languageId;
+
+        return tmp;
+      },
+    ),
+  save: jest.fn().mockImplementation((tmp: Template) => tmp),
 };
 
 describe('TemplatesService', () => {
@@ -37,5 +51,26 @@ describe('TemplatesService', () => {
     const got = await service.findAll('12312312');
 
     expect(got).toHaveLength(1);
+  });
+
+  it('should insert record with given dto', async () => {
+    const dto = new CreateTemplateDto();
+    dto.languageId = '1231231';
+    dto.content = 'sample';
+
+    const userId = '131231312';
+
+    const got = await service.create(userId, dto);
+
+    expect(mockTemplateRepository.create).toHaveBeenCalledWith({
+      languageId: dto.languageId,
+      content: dto.content,
+      userId,
+    });
+    expect(mockTemplateRepository.save).toHaveBeenCalled();
+
+    expect(got.userId).toEqual(userId);
+    expect(got.content).toEqual(dto.content);
+    expect(got.languageId).toEqual(dto.languageId);
   });
 });
