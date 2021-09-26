@@ -1,39 +1,68 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TemplatesController } from './templates.controller';
-import Template from './template.model';
 import { TemplatesService } from './templates.service';
+import { Template } from './template.entity';
+
+import * as mocks from 'node-mocks-http';
+import { CreateTemplateDto } from './create-template.dto';
+
+const mockTemplateService = {
+  findAll: jest.fn().mockImplementation(() => {
+    const t1 = new Template();
+    t1.id = '12312';
+
+    return [t1];
+  }),
+  create: jest.fn().mockImplementation(() => {
+    const t = new Template();
+    t.id = 'loremipsum';
+
+    return t;
+  }),
+};
 
 describe('TemplatesController', () => {
   let controller: TemplatesController;
-  let service: TemplatesService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [TemplatesController],
-      providers: [TemplatesService],
+      providers: [
+        {
+          provide: TemplatesService,
+          useValue: mockTemplateService,
+        },
+      ],
     }).compile();
 
     controller = module.get<TemplatesController>(TemplatesController);
-    service = module.get<TemplatesService>(TemplatesService);
   });
 
   it('should be defined', () => {
     expect(controller).toBeDefined();
   });
 
-  it('should return mock list of templates', () => {
-    const tmp = new Template();
-    tmp.title = 'Example';
-    tmp.content = 'Content';
+  it('should list templates for user', () => {
+    const req = mocks.createRequest();
+    req.user = { id: '12312312' };
 
-    const result = [tmp];
+    const got = controller.findAll(req);
 
-    jest.spyOn(service, 'findAll').mockImplementation(() => result);
+    expect(mockTemplateService.findAll).toHaveBeenCalledWith('12312312');
+    expect(got).toHaveLength(1);
+  });
 
-    const got = controller.findAll();
+  it('should handle create with valid params', async () => {
+    const req = mocks.createRequest();
+    req.user = { id: '12312312' };
 
-    expect(got).toBe(result);
-    expect(got[0].title).toEqual(tmp.title);
-    expect(got[0].content).toEqual(tmp.content);
+    const dto = new CreateTemplateDto();
+    dto.content = 'Hello darkness my old friend how are you today?';
+    dto.languageId = '4545232131232';
+
+    const got = await controller.create(req, dto);
+
+    expect(mockTemplateService.create).toHaveBeenCalled();
+    expect(got.id).toEqual('loremipsum');
   });
 });
