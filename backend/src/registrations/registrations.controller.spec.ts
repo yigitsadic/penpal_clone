@@ -5,6 +5,7 @@ import { RegistrationDto } from './registration.dto';
 import { HttpStatus, UnprocessableEntityException } from '@nestjs/common';
 import { AuthService } from '../auth/auth.service';
 import { PasswordModule } from '../password/password.module';
+import { User } from '../users/user.entity';
 
 const mockRegistrationService = {
   register: jest.fn().mockImplementation(() => {
@@ -12,7 +13,9 @@ const mockRegistrationService = {
   }),
 };
 
-const mockAuthService = {};
+const mockAuthService = {
+  generateToken: jest.fn().mockImplementation(() => 'ey123.we.we'),
+};
 
 describe('RegistrationsController', () => {
   let controller: RegistrationsController;
@@ -41,6 +44,10 @@ describe('RegistrationsController', () => {
   });
 
   it('should respond with success message', async () => {
+    jest.spyOn(mockRegistrationService, 'register').mockImplementation(() => {
+      return new User({ id: '123123' });
+    });
+
     const res = await controller.register(new RegistrationDto());
 
     expect(res.access_token).toEqual(expect.any(String));

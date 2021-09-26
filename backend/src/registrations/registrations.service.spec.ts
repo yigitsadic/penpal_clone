@@ -16,9 +16,9 @@ dto.gender = Gender.female;
 
 const mockRegisterRepository = {
   create: jest.fn().mockImplementation(() => {
-    return new User();
+    return new User({});
   }),
-  save: jest.fn().mockImplementation(async () => new User()),
+  save: jest.fn().mockImplementation(async () => new User({})),
 };
 
 describe('RegistrationsService', () => {
