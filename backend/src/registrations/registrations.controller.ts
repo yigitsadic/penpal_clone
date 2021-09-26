@@ -1,4 +1,9 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { RegistrationDto } from './registration.dto';
 import { RegistrationsService } from './registrations.service';
 
@@ -8,8 +13,12 @@ export class RegistrationsController {
 
   @Post()
   async register(@Body() registerDto: RegistrationDto) {
-    await this.service.register(registerDto);
+    try {
+      await this.service.register(registerDto);
 
-    return { message: 'successful' };
+      return { status: 'success' };
+    } catch (error) {
+      throw new UnprocessableEntityException(error, 'unable to continue');
+    }
   }
 }
