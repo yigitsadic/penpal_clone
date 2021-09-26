@@ -12,11 +12,8 @@ export class City {
   @Column()
   country: string;
 
-  // I will look for geo features of Postgres.
-  /*
-  public longitude: number;
-  public latitude: number;
-   */
+  @Column()
+  location: string;
 
   @OneToMany(() => User, (user) => user.city)
   users: User[];
