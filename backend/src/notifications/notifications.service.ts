@@ -1,24 +1,33 @@
 import { Injectable } from '@nestjs/common';
-import Notification from './notification.model';
+import { Notification } from './notification.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class NotificationsService {
-  notifications: Notification[] = [
-    {
-      title: 'Hello World',
-      content: 'This is content',
-      readAt: undefined,
-      userId: '131231',
-    },
-  ];
+  constructor(
+    @InjectRepository(Notification)
+    private repository: Repository<Notification>,
+  ) {}
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  findAllForUser(_userId: string): Notification[] {
-    return this.notifications;
+  async findAllForUser(userId: string) {
+    return await this.repository.find({
+      where: {
+        userId,
+      },
+      order: {
+        createdAt: 'DESC',
+      },
+    });
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  markAllAsRead(_userId: string): boolean {
-    return true;
+  async markAllAsRead(userId: string) {
+    await this.repository.update(
+      {
+        userId,
+        isRead: false,
+      },
+      { isRead: true, readAt: 'now()' },
+    );
   }
 }

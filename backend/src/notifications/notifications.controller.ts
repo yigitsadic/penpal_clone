@@ -1,23 +1,25 @@
-import { Controller, Get, Put } from '@nestjs/common';
+import { Controller, Get, Put, Req, UseGuards } from '@nestjs/common';
 import { NotificationsService } from './notifications.service';
-import Notification from './notification.model';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { Request } from 'express';
 
 @Controller('notifications')
 export class NotificationsController {
   constructor(private service: NotificationsService) {}
 
   @Get()
-  findAll(): Notification[] {
-    // TODO: Should parse token from header in the future.
-    return this.service.findAllForUser('example');
+  @UseGuards(JwtAuthGuard)
+  findAll(@Req() req: Request) {
+    return this.service.findAllForUser(req.user.id);
   }
 
   @Put('/read_all')
-  readAll() {
-    const status = this.service.markAllAsRead('example');
+  @UseGuards(JwtAuthGuard)
+  async readAll(@Req() req: Request) {
+    await this.service.markAllAsRead(req.user.id);
 
     return {
-      status,
+      status: 'ok',
     };
   }
 }
