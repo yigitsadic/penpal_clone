@@ -1,4 +1,5 @@
 import {
+  Body,
   ClassSerializerInterceptor,
   Controller,
   Get,
@@ -14,6 +15,7 @@ import { UsersService } from './users.service';
 import { Gender } from './genders.enum';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Request } from 'express';
+import { UpdateProfileDto } from './update-profile.dto';
 
 @Controller('users')
 export class UsersController {
@@ -25,6 +27,9 @@ export class UsersController {
   profile(@Req() req: Request) {
     return this.service.userDetail(req.user.id);
   }
+
+  @UseGuards(JwtAuthGuard)
+  update(@Req() req: Request, @Body() dto: UpdateProfileDto) {}
 
   @Get('/:id')
   @UseInterceptors(ClassSerializerInterceptor)
