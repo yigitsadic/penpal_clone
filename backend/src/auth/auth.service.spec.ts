@@ -3,6 +3,7 @@ import { AuthService } from './auth.service';
 import { PasswordService } from '../password/password.service';
 import { UsersService } from '../users/users.service';
 import { User } from '../users/user.entity';
+import { JwtService } from '@nestjs/jwt';
 
 const mockUserService = {
   findOneByEmail: jest.fn().mockImplementation(() => {
@@ -23,6 +24,7 @@ describe('AuthService', () => {
       providers: [
         AuthService,
         PasswordService,
+        JwtService,
         {
           provide: UsersService,
           useValue: mockUserService,

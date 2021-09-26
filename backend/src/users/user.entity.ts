@@ -21,7 +21,7 @@ export class User {
   @Column()
   bio: string;
 
-  @Column({ select: false })
+  @Column()
   password: string;
 
   // TODO: It's not working. Find a way to fix it!

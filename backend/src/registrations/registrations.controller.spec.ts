@@ -2,12 +2,19 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { RegistrationsController } from './registrations.controller';
 import { RegistrationsService } from './registrations.service';
 import { RegistrationDto } from './registration.dto';
-import { Gender } from '../users/genders.enum';
 import { HttpStatus, UnprocessableEntityException } from '@nestjs/common';
+import { AuthService } from '../auth/auth.service';
+import { PasswordModule } from '../password/password.module';
+import { JwtModule } from '@nestjs/jwt';
+import { jwtConstants } from '../auth/constants';
 
 const mockRegistrationService = {
-  register: jest.fn().mockImplementation(() => {}),
+  register: jest.fn().mockImplementation(() => {
+    return null;
+  }),
 };
+
+const mockAuthService = {};
 
 describe('RegistrationsController', () => {
   let controller: RegistrationsController;
@@ -15,10 +22,15 @@ describe('RegistrationsController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [RegistrationsController],
+      imports: [PasswordModule],
       providers: [
         {
           provide: RegistrationsService,
           useValue: mockRegistrationService,
+        },
+        {
+          provide: AuthService,
+          useValue: mockAuthService,
         },
       ],
     }).compile();
@@ -33,7 +45,7 @@ describe('RegistrationsController', () => {
   it('should respond with success message', async () => {
     const res = await controller.register(new RegistrationDto());
 
-    expect(res.status).toEqual('success');
+    expect(res.access_token).toEqual(expect.any(String));
   });
 
   it('should respond with failure message when error occurred', async () => {
