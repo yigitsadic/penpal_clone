@@ -12,11 +12,13 @@ export class NotificationsService {
     },
   ];
 
-  findAllForUser(userId: string): Notification[] {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  findAllForUser(_userId: string): Notification[] {
     return this.notifications;
   }
 
-  markAllAsRead(userId: string): boolean {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  markAllAsRead(_userId: string): boolean {
     return true;
   }
 }

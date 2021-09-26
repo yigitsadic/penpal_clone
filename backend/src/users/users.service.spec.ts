@@ -54,9 +54,7 @@ describe('UsersService', () => {
     jest
       .spyOn(mockUserRepository, 'findOne')
       .mockImplementation(({ where: { email } }) => {
-        const u = new User();
-        u.email = email;
-        return u;
+        return new User({ email });
       });
 
     const result = await service.findOneByEmail('yigit@example.com');
