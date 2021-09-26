@@ -3,7 +3,6 @@ import { CitiesModule } from './cities/cities.module';
 import { LanguagesModule } from './languages/languages.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { TemplatesModule } from './templates/templates.module';
-import { ConversationsModule } from './conversations/conversations.module';
 import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RegistrationsModule } from './registrations/registrations.module';
@@ -26,7 +25,6 @@ import { AuthModule } from './auth/auth.module';
     LanguagesModule,
     NotificationsModule,
     TemplatesModule,
-    ConversationsModule,
     UsersModule,
     RegistrationsModule,
     PasswordModule,
