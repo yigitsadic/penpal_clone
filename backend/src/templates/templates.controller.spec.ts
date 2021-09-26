@@ -1,39 +1,47 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TemplatesController } from './templates.controller';
-import Template from './template.model';
 import { TemplatesService } from './templates.service';
+import { Template } from './template.entity';
+
+import * as mocks from 'node-mocks-http';
+
+const mockTemplateService = {
+  findAll: jest.fn().mockImplementation(() => {
+    const t1 = new Template();
+    t1.id = '12312';
+
+    return [t1];
+  }),
+};
 
 describe('TemplatesController', () => {
   let controller: TemplatesController;
-  let service: TemplatesService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [TemplatesController],
-      providers: [TemplatesService],
+      providers: [
+        {
+          provide: TemplatesService,
+          useValue: mockTemplateService,
+        },
+      ],
     }).compile();
 
     controller = module.get<TemplatesController>(TemplatesController);
-    service = module.get<TemplatesService>(TemplatesService);
   });
 
   it('should be defined', () => {
     expect(controller).toBeDefined();
   });
 
-  it('should return mock list of templates', () => {
-    const tmp = new Template();
-    tmp.title = 'Example';
-    tmp.content = 'Content';
+  it('should list templates for user', () => {
+    const req = mocks.createRequest();
+    req.user = { id: '12312312' };
 
-    const result = [tmp];
+    const got = controller.findAll(req);
 
-    jest.spyOn(service, 'findAll').mockImplementation(() => result);
-
-    const got = controller.findAll();
-
-    expect(got).toBe(result);
-    expect(got[0].title).toEqual(tmp.title);
-    expect(got[0].content).toEqual(tmp.content);
+    expect(mockTemplateService.findAll).toHaveBeenCalledWith('12312312');
+    expect(got).toHaveLength(1);
   });
 });

@@ -1,13 +1,17 @@
-import { Controller, Get } from '@nestjs/common';
-import Template from './template.model';
+import { Controller, Get, Req, UseGuards } from '@nestjs/common';
 import { TemplatesService } from './templates.service';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { Request } from 'express';
 
 @Controller('templates')
 export class TemplatesController {
   constructor(private service: TemplatesService) {}
 
   @Get()
-  findAll(): Template[] {
-    return this.service.findAll('13123');
+  @UseGuards(JwtAuthGuard)
+  findAll(@Req() req: Request) {
+    const { id } = req.user;
+
+    return this.service.findAll(id);
   }
 }
