@@ -45,11 +45,11 @@ describe('AuthService', () => {
     const expectedId = 'some-uuid';
 
     jest.spyOn(mockUserService, 'findOneByEmail').mockImplementation(() => {
-      const u = new User();
-      u.id = expectedId;
-      u.password = hashedPw;
-      u.email = testData.email;
-      return u;
+      return new User({
+        id: expectedId,
+        password: hashedPw,
+        email: testData.email,
+      });
     });
 
     const got = await service.validateUser(testData.email, testData.password);
@@ -59,10 +59,10 @@ describe('AuthService', () => {
 
   it('should return null if password not matches', async () => {
     jest.spyOn(mockUserService, 'findOneByEmail').mockImplementation(() => {
-      const u = new User();
-      u.password = testData.password;
-      u.email = testData.email;
-      return u;
+      return new User({
+        email: testData.email,
+        password: testData.password,
+      });
     });
 
     const got = await service.validateUser(testData.email, testData.password);
