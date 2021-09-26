@@ -26,7 +26,6 @@ export class User {
   @Column()
   password: string;
 
-  // TODO: It's not working. Find a way to fix it!
   @ManyToOne(() => City, (city) => city.users, {})
   city: City;
 

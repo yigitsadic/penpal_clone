@@ -15,6 +15,7 @@ export class UsersService {
       where: {
         id,
       },
+      relations: ['city'],
     });
   }
 
@@ -31,6 +32,7 @@ export class UsersService {
       where: {
         gender,
       },
+      relations: ['city'],
     });
   }
 }
