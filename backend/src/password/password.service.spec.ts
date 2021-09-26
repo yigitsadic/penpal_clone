@@ -25,4 +25,13 @@ describe('PasswordService', () => {
     expect(got).toEqual(expect.any(String));
     expect(got).not.toEqual(given);
   });
+
+  it('should return true when password matches', async () => {
+    const given = 'lorem ipsum';
+    const hashed = await service.hashPassword(given);
+
+    const got = await service.comparePasswords(given, hashed);
+
+    expect(got).toBeTruthy();
+  });
 });
