@@ -1,5 +1,6 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { City } from '../cities/city.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity({ name: 'users' })
 export class User {
@@ -21,6 +22,7 @@ export class User {
   @Column()
   bio: string;
 
+  @Exclude()
   @Column()
   password: string;
 
@@ -30,4 +32,8 @@ export class User {
 
   @Column()
   cityId: string;
+
+  constructor(partial: Partial<User>) {
+    Object.assign(this, partial);
+  }
 }
