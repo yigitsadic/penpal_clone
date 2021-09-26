@@ -18,6 +18,14 @@ export class UsersService {
     });
   }
 
+  async findOneByEmail(email: string) {
+    return await this.repository.findOne({
+      where: {
+        email,
+      },
+    });
+  }
+
   async searchUser(gender: string) {
     return await this.repository.find({
       where: {

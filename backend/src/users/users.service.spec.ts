@@ -49,4 +49,19 @@ describe('UsersService', () => {
     expect(mockUserRepository.find).toHaveBeenCalled();
     expect(result).toHaveLength(1);
   });
+
+  it('should search by email', async () => {
+    jest
+      .spyOn(mockUserRepository, 'findOne')
+      .mockImplementation(({ where: { email } }) => {
+        const u = new User();
+        u.email = email;
+        return u;
+      });
+
+    const result = await service.findOneByEmail('yigit@example.com');
+
+    expect(mockUserRepository.findOne).toHaveBeenCalled();
+    expect(result.email).toEqual('yigit@example.com');
+  });
 });
