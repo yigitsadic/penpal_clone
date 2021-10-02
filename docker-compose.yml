@@ -9,7 +9,7 @@ services:
     environment:
       - "POSTGRES_PASSWORD=password"
       - "POSTGRES_USER=penpal"
-      - "PGDATA: /data/postgres"
+      - "PGDATA=/data/postgres"
       - "POSTGRES_DB=penpal_clone"
     volumes:
       - postgres_data:/data/postgres
