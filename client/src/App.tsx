@@ -1,7 +1,12 @@
 import React from 'react';
+import Header from './Header/Header';
 
 const App: React.FC = () => {
-  return <div>Penpal Clone Project</div>;
+  return (
+    <>
+      <Header />
+    </>
+  );
 };
 
 export default App;
